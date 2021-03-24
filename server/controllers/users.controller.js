@@ -4,6 +4,7 @@ const Helper = require("../libraries/helper");
 const email = require("../libraries/email");
 const express = require('express');
 const bcrypt = require('bcrypt');
+const _ = require('underscore');
 const app = express();
 
 
