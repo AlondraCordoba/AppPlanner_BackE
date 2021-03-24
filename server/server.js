@@ -10,7 +10,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const hostname = '127.0.0.1';
 
-//const morgan = require('morgan');
+const morgan = require('morgan');
 const app = express();
 
 // parse application/x-www-form-urlencoded
@@ -20,8 +20,11 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 //Middlewares
-//app.use(morgan('dev'));
+app.use(morgan('dev'));
 const opcionesGet = require('./middlewares/opcionesGet');
+app.use(opcionesGet);
+
+app.use('/', require('./routes/routes'));
 
 // Habilita CORS
 app.use(cors());
@@ -38,12 +41,6 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use(opcionesGet);
-app.use('/', require('./routes/routes'));
-
-// process.env.URLDB = 'mongodb://localhost:27017/appPlanner';
-
-process.env.URLDB = 'mongodb+srv://Admin:Alondra0729@cluster0.cn9sh.mongodb.net/appPlanner?retryWrites=true&w=majority';
 
 app.get('/', function(req, res) {
     res.send('<h1> Bienvenido a mi Servidor de Plan-IT</h1>')
