@@ -13,4 +13,4 @@ if (process.env.NODE_ENV === 'dev') {
 }*/
 
 // Declaración de array de middleweres a usar en las APIS
-process.middlewares = []; //
+//process.middlewares = []; //

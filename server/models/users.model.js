@@ -1,6 +1,6 @@
 /*jshint esversion: 8*/
 const mongoose = require('mongoose');
-const { Schema } = mongoose;
+let Schema = mongoose.Schema;
 
 const userSchema = new Schema({
     username: {
