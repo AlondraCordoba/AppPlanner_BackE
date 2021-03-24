@@ -14,7 +14,7 @@ const morgan = require('morgan');
 const app = express();
 
 // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({ extended: true }))
 
 // parse application/json
 app.use(bodyParser.json())
@@ -48,6 +48,8 @@ app.get('/', function(req, res) {
 
 
 // Conexion
+// process.env.URLDB = "mongodb://localhost:27017/appPlanner";
+process.env.URLDB = "mongodb+srv://Admin:Alondra0729@cluster0.cn9sh.mongodb.net/appPlanner?retryWrites=true&w=majority";
 mongoose.connect(process.env.URLDB, {
     useNewUrlParser: true,
     useCreateIndex: true,
@@ -60,6 +62,9 @@ mongoose.connect(process.env.URLDB, {
 });
 
 // Conexion
-server = app.listen(process.env.PORT, hostname, () => {
+/*server = app.listen(process.env.PORT, hostname, () => {
     console.log('[SERVER]'.green, `running at http://${hostname}:${process.env.port}`);
+});*/
+app.listen(process.env.PORT, () => {
+    console.log('[SERVER]'.green, `running at`, process.env.PORT);
 });
