@@ -2,16 +2,19 @@ require('./config/database');
 require('colors');
 
 const express = require('express');
+const cors = require('cors');
+const app = express();
+app.use(cors());
+
 
 // Conexion a BD (mongoDB)
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
-const cors = require('cors');
+
 const hostname = '127.0.0.1';
 
 const morgan = require('morgan');
-const app = express();
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -26,18 +29,13 @@ app.use(opcionesGet);
 
 app.use('/', require('./routes/routes'));
 
-// Habilita CORS
+// Habilitar CORS
 app.use(cors());
 app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader(
-        'Access-Control-Allow-Headers',
-        'Origin, X-Requested-With, Content-Type, Accept, Authorization'
-    );
-    res.setHeader(
-        'Access-Control-Allow-Methods',
-        'GET, POST, PATCH, PUT, DELETE, OPTIONS'
-    );
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE, PATCH');
+    res.header('Allow', 'GET, POST, OPTIONS, PUT, DELETE, PATCH');
     next();
 });
 
@@ -49,7 +47,7 @@ app.get('/', function(req, res) {
 
 // Conexion
 // process.env.URLDB = "mongodb://localhost:27017/appPlanner";
-process.env.URLDB = "mongodb+srv://Admin:Alondra0729@cluster0.cn9sh.mongodb.net/appPlanner?retryWrites=true&w=majority";
+process.env.URLDB = 'mongodb+srv://Admin:Alondra0729@cluster0.cn9sh.mongodb.net/appPlanner';
 mongoose.connect(process.env.URLDB, {
     useNewUrlParser: true,
     useCreateIndex: true,

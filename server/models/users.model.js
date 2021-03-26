@@ -1,6 +1,7 @@
 /*jshint esversion: 8*/
 const mongoose = require('mongoose');
 let Schema = mongoose.Schema;
+const eventsCalendarModel = require('./eventsCalendar.model')
 
 const userSchema = new Schema({
     username: {
@@ -31,6 +32,9 @@ const userSchema = new Schema({
         type: String,
         required: [true, 'Favor de insertar su Género.']
     },
+    eventsCalendar: [
+        [eventsCalendarModel.schema]
+    ],
     role: {
         type: String,
         default: "USER_ROLE"
