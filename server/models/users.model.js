@@ -1,7 +1,8 @@
 /*jshint esversion: 8*/
 const mongoose = require('mongoose');
 let Schema = mongoose.Schema;
-const eventsCalendarModel = require('./eventsCalendar.model')
+const eventsCalendarModel = require('./eventsCalendar.model');
+const toDoListModel = require('./toDoList.model')
 
 const userSchema = new Schema({
     username: {
@@ -34,6 +35,9 @@ const userSchema = new Schema({
     },
     eventsCalendar: [
         [eventsCalendarModel.schema]
+    ],
+    toDoList: [
+        [toDoListModel.schema]
     ],
     role: {
         type: String,

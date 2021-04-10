@@ -12,7 +12,7 @@ const app = express();
 app.get('/', async(req, res) => {
     try {
         if (req.query.idUsuario) req.queryMatch._id = req.query.idUsuario;
-        if (req.query.termino) req.queryMatch.$or = Helper(["username", "email", "phoneNumber"], req.query.termino);
+        if (req.query.termino) req.queryMatch.$or = Helper(["username", "email", "_id"], req.query.termino);
 
         const usuario = await UsuarioModel.find({...req.queryMatch })
 

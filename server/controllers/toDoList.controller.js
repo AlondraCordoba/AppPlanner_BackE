@@ -1,37 +1,37 @@
 /*jshint esversion: 9*/
 const UsuarioModel = require('../models/users.model');
-const EventsCalendarModel = require('../models/eventsCalendar.model');
+const ToDoListModel = require('../models/toDoList.model')
 
 const express = require('express');
 
 const app = express();
 
 
-// http://localhost:3000/eventsCalendar/?idUsuario=603e51f51a35a066388f0f28
+// http://localhost:3000/toDoList/?idUsuario=603e51f51a35a066388f0f28
 app.get('/', async(req, res) => {
 
     try {
 
-        let idEventsCalendar = '';
+        let idToDoList = '';
 
         const idUsuario = req.query.idUsuario;
 
-        if (req.query.idEventsCalendar)
-            idEventsCalendar = req.query.idEventsCalendar;
+        if (req.query.idToDoList)
+            idToDoList = req.query.idToDoList;
 
         let queryFind = {};
         let queryOptions = {};
 
-        if (idEventsCalendar) {
+        if (idToDoList) {
             queryFind = {
                 '_id': idUsuario,
-                'eventsCalendar': {
+                'toDoList': {
                     $elemMatch: {
-                        '_id': idEventsCalendar
+                        '_id': idToDoList
                     }
                 }
             };
-            queryOptions = { 'eventsCalendar.$': 1 };
+            queryOptions = { 'toDoList.$': 1 };
         } else {
             queryFind = {
                 '_id': idUsuario
@@ -48,13 +48,13 @@ app.get('/', async(req, res) => {
             });
         }
 
-        if (eventsCalendar.length <= 0) {
+        if (toDoList.length <= 0) {
             res.status(404).send({
                 estatus: '404',
                 err: true,
                 msg: 'No se encontraron eventos  en la base de datos.',
                 cont: {
-                    eventsCalendar
+                    toDoList
                 }
             });
         } else {
@@ -63,7 +63,7 @@ app.get('/', async(req, res) => {
                 err: false,
                 msg: 'Informacion obtenida correctamente.',
                 cont: {
-                    eventsCalendar
+                    toDoList
                 }
             });
         }
@@ -82,7 +82,7 @@ app.get('/', async(req, res) => {
 
 });
 
-// http://localhost:3000/eventsCalendar/?idUsuario=603e51f51a35a066388f0f28
+// http://localhost:3000/toDoList/?idUsuario=603e51f51a35a066388f0f28
 app.post('/', async(req, res) => {
 
     try {
@@ -97,33 +97,33 @@ app.post('/', async(req, res) => {
             });
         }
 
-        const eventsCalendar = new EventsCalendarModel(req.body);
-        let err = eventsCalendar.validateSync();
+        const toDoList = new ToDoListModel(req.body);
+        let err = toDoList.validateSync();
 
         if (err) {
             return res.status(400).json({
                 ok: false,
                 resp: 400,
-                msg: 'Error: Error al Insertar la eventsCalendar.',
+                msg: 'Error: Error al Insertar la toDoList.',
                 cont: {
                     err
                 }
             });
         }
 
-        const eventsCalendarDisponible = await UsuarioModel.findOne({ _id: idUsuario });
+        const toDoListDisponible = await UsuarioModel.findOne({ _id: idUsuario });
 
-        if (eventsCalendarDisponible == null) {
+        if (toDoListDisponible == null) {
             return res.status(404).send({
                 estatus: '404',
                 err: true,
-                msg: 'Error: no se encontro el eventsCalendar.',
+                msg: 'Error: no se encontro el toDoList.',
                 cont: 0
             });
         } else {
-            const nuevaeventsCalendar = await UsuarioModel.findByIdAndUpdate(idUsuario, { $push: { 'eventsCalendar': eventsCalendar } }, { new: true });
+            const nuevatoDoList = await UsuarioModel.findByIdAndUpdate(idUsuario, { $push: { 'toDoList': toDoList } }, { new: true });
 
-            if (nuevaeventsCalendar.length <= 0) {
+            if (nuevatoDoList.length <= 0) {
                 res.status(400).send({
                     estatus: '400',
                     err: true,
@@ -136,7 +136,7 @@ app.post('/', async(req, res) => {
                     err: false,
                     msg: 'Informacion insertada correctamente.',
                     cont: {
-                        eventsCalendar
+                        toDoList
                     }
                 });
             }
@@ -153,15 +153,15 @@ app.post('/', async(req, res) => {
     }
 });
 
-// http://localhost:3000/eventsCalendar/?idUsuario=603e51f51a35a066388f0f28&idEventsCalendar=603e5d996dcc7c2108734283
+// http://localhost:3000/toDoList/?idUsuario=603e51f51a35a066388f0f28&idToDoList=603e5d996dcc7c2108734283
 app.put('/', async(req, res) => {
 
     try {
 
         const idUsuario = req.query.idUsuario;
-        const idEventsCalendar = req.query.idEventsCalendar;
+        const idToDoList = req.query.idToDoList;
 
-        if (idUsuario == undefined || idEventsCalendar == undefined) {
+        if (idUsuario == undefined || idToDoList == undefined) {
             return res.status(400).send({
                 estatus: '400',
                 err: true,
@@ -170,10 +170,10 @@ app.put('/', async(req, res) => {
             });
         }
 
-        req.body._id = idEventsCalendar;
+        req.body._id = idToDoList;
 
-        const eventsCalendar = new EventsCalendarModel(req.body);
-        let err = eventsCalendar.validateSync();
+        const toDoList = new ToDoListModel(req.body);
+        let err = toDoList.validateSync();
 
         if (err) {
             return res.status(400).json({
@@ -186,9 +186,9 @@ app.put('/', async(req, res) => {
             });
         }
 
-        const nuevaeventsCalendar = await UsuarioModel.findOneAndUpdate({ '_id': idUsuario, 'eventsCalendar._id': idEventsCalendar }, { $set: { 'eventsCalendar.$[i]': eventsCalendar } }, { arrayFilters: [{ 'i._id': idEventsCalendar }], new: true });
+        const nuevatoDoList = await UsuarioModel.findOneAndUpdate({ '_id': idUsuario, 'toDoList._id': idToDoList }, { $set: { 'toDoList.$[i]': toDoList } }, { arrayFilters: [{ 'i._id': idToDoList }], new: true });
 
-        if (nuevaeventsCalendar.length <= 0) {
+        if (nuevatoDoList.length <= 0) {
             res.status(400).send({
                 estatus: '400',
                 err: true,
@@ -201,7 +201,7 @@ app.put('/', async(req, res) => {
                 err: false,
                 msg: 'Informacion actualizada correctamente.',
                 cont: {
-                    eventsCalendar
+                    toDoList
                 }
             });
         }
@@ -210,7 +210,7 @@ app.put('/', async(req, res) => {
         res.status(500).send({
             estatus: '500',
             err: true,
-            msg: 'Error al actualizar la eventsCalendar.',
+            msg: 'Error al actualizar la toDoList.',
             cont: {
                 err: Object.keys(err).length === 0 ? err.message : err
             }
@@ -219,16 +219,16 @@ app.put('/', async(req, res) => {
 
 });
 
-// http://localhost:3000/eventsCalendar/?idUsuario=603e51f51a35a066388f0f28&idEventsCalendar=603e5d996dcc7c2108734283
+// http://localhost:3000/toDoList/?idUsuario=603e51f51a35a066388f0f28&idToDoList=603e5d996dcc7c2108734283
 app.delete('/', async(req, res) => {
 
     try {
 
         const idUsuario = req.query.idUsuario;
-        const idEventsCalendar = req.query.idEventsCalendar;
+        const idToDoList = req.query.idToDoList;
         const blnActivo = req.body.blnActivo;
 
-        if (idUsuario == undefined || idEventsCalendar == undefined) {
+        if (idUsuario == undefined || idToDoList == undefined) {
             return res.status(400).send({
                 estatus: '400',
                 err: true,
@@ -238,14 +238,13 @@ app.delete('/', async(req, res) => {
         }
 
 
-        const nuevaeventsCalendar = await UsuarioModel.findOneAndUpdate({ '_id': idUsuario, 'eventsCalendar._id': eventsCalendar }, { $set: { 'eventsCalendar.$[i]': eventsCalendar } }, { arrayFilters: [{ 'i._id': eventsCalendar }], new: true });
+        const nuevatoDoList = await UsuarioModel.deleteOne({ '_id': idUsuario, 'toDoList._id': idToDoList });
 
-
-        if (nuevaeventsCalendar.length <= 0) {
+        if (nuevatoDoList.length <= 0) {
             res.status(400).send({
                 estatus: '400',
                 err: true,
-                msg: 'No se pudo eliminar la eventsCalendar en la base de datos.',
+                msg: 'No se pudo eliminar la toDoList en la base de datos.',
                 cont: 0
             });
         } else {
@@ -254,7 +253,7 @@ app.delete('/', async(req, res) => {
                 err: false,
                 msg: 'Informacion eliminada correctamente.',
                 cont: {
-                    nuevaeventsCalendar
+                    nuevatoDoList
                 }
             });
         }
